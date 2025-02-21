@@ -56,9 +56,9 @@
     @stack('styles')
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Training</a>
+            <a class="navbar-brand fw-bold" href="/">Training</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -69,9 +69,14 @@
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
                 </ul>
+                <ul class="navbar-nav ms-3">
+                    <li class="nav-item"><a class="btn btn-outline-light me-2" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-danger" href="{{route('training.sign-up')}}">Sign Up</a></li>
+                </ul>
             </div>
         </div>
     </nav>
+    
     
     <main class="container mt-4 vh-100">
         @yield('content')
