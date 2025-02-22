@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+@extends('layouts.template')
+
+@section('CSS')
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
         .login-container {
             max-width: 600px;
             width: 100%;
@@ -40,42 +32,58 @@
             font-weight: bold;
         }
     </style>
-</head>
-<body>
+@endsection
 
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="login-container">
-        <div class="text-center">
-            <a href="/" class="text-center text-dark login-title mb-3 text-decoration-none">Training</a>
-        </div>
-        <p class="text-center text-muted mb-4">Sign in to your account</p>
-        <form>
-            <div class="mb-4">
-                <label for="email" class="form-label fw-semibold">Email Address</label>
-                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+@section('content')
+    
+    @if (session('success'))
+        <script>
+            alert("{{session('success')}}")
+            window.location.href = '/';
+        </script>
+    @endif
+
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="login-container">
+            <div class="text-center">
+                <h3 class="text-center login-title mb-3">Welcome Back</h3>
             </div>
-            <div class="mb-4">
-                <label for="password" class="form-label fw-semibold">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <input type="checkbox" id="remember" class="form-check-input">
-                    <label for="remember" class="form-check-label">Remember me</label>
+            <p class="text-center text-muted mb-4">Sign in to your account</p>
+
+            
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="text-danger text-center">{{session('error')}}</h4>
                 </div>
-                <a href="#" class="text-primary text-decoration-none">Forgot Password?</a>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
-        <div class="text-center mt-4">
-            <span class="text-muted">Don't have an account?</span>
-            <a href="/sign-up" class="text-primary text-decoration-none fw-semibold">Sign Up</a>
-        </div>
-        <hr>
-     
-    </div>
-</div>
+            @endif
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+            <form method="POST" action="{{route('training.login')}}">
+                @csrf
+                <div class="mb-4">
+                    <label for="email" class="form-label fw-semibold">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <input type="checkbox" id="remember" class="form-check-input">
+                        <label for="remember" class="form-check-label">Remember me</label>
+                    </div>
+                    <a href="#" class="text-primary text-decoration-none">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+            <div class="text-center mt-4">
+                <span class="text-muted">Don't have an account?</span>
+                <a href="/sign-up" class="text-primary text-decoration-none fw-semibold">Sign Up</a>
+            </div>
+            <hr>
+        
+        </div>
+    </div>
+@endsection
+
+

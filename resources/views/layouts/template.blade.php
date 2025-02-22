@@ -53,7 +53,8 @@
             color: #ffdd57;
         }
     </style>
-    @stack('styles')
+    
+    @yield('CSS')
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -69,16 +70,28 @@
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
                 </ul>
-                <ul class="navbar-nav ms-3">
-                    <li class="nav-item"><a class="btn btn-outline-light me-2" href="/login">Login</a></li>
-                    <li class="nav-item"><a class="btn btn-danger" href="{{route('training.sign-up')}}">Sign Up</a></li>
-                </ul>
+                @auth
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-flex align-items-center">
+                            <span class="text-light fw-semibold fs-5 me-3">Hello, {{$name}}</span>
+                            <a class="btn btn-danger px-4 py-2 rounded-pill" href="/logout">Log out</a>
+                        </li>
+                    </ul>
+                @endauth
+
+                @guest
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="btn btn-outline-light me-2 mb-2" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="btn btn-danger" href="{{route('training.sign-up')}}">Sign Up</a></li>
+                    </ul>
+                @endguest
+
             </div>
         </div>
     </nav>
     
     
-    <main class="container mt-4 vh-100">
+    <main class="container mt-4">
         @yield('content')
     </main>
     

@@ -10,10 +10,7 @@ use App\Models\User;
 class UserController extends Controller
 {
     //
-    public function showLogin()
-    {
-        return view('components.login');
-    }
+   
 
     public function showSignUp()
     {
@@ -48,4 +45,11 @@ class UserController extends Controller
         
         return back()->with('success','Dang ky tai khoan thanh cong');
     }
+
+
+    public function showAccount()
+    {
+        return view('training.account');
+    }
+
 }
