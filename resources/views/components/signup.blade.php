@@ -2,14 +2,7 @@
 
 @section('title','Sign Up')
 @section('CSS')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -61,34 +54,35 @@
                     @csrf
                     <div class="mb-4">
                         <label for="first_name" class="form-label fw-semibold">First Name</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{old('first_name')}}" required>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{old('first_name')}}" placeholder="Your first name" required>
                         @error('first_name') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="last_name" class="form-label fw-semibold">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{old('last_name')}}" required>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{old('last_name')}}" placeholder="Your last name" required>
                         @error('last_name') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="email" class="form-label fw-semibold">Email Address</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" required>
+                        <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="Your email address" required>
                         @error('email') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="address" class="form-label fw-semibold">Address</label>
-                        <input type="text" class="form-control" id="address" name="address" value="{{old('address')}}" required>
+                        <input type="text" class="form-control" id="address" name="address" value="{{old('address')}}" placeholder="Your address" required>
                         @error('address') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label fw-semibold">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Your password" required>
                         @error('password') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="confirm_password" class="form-label fw-semibold">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
                         @error('confirm_password') <span class="text-danger">{{$message}}</span> @enderror
                     </div>
+
                     <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                 </form>
                 <div class="text-center mt-4">

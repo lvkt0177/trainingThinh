@@ -17,25 +17,23 @@ class UserMiddleware
     {
         $user = Auth::guard('user')->user();
 
-        if($user)
-        {
-            if($user->status == 0)
-            {
-                Auth::guard('user')->logout();
-                return redirect()->route('training.login')->with('error','Tai khoan dang Cho phe duyet');
-            }
+        if (!$user) {
+            return back()->with('error', 'Bạn cần đăng nhập để tiếp tục');
+        }
 
-            if($user->status == 2)
-            {
-                Auth::guard('user')->logout();
-                return redirect()->route('training.login')->with('error','Tai khoan bi Tu choi dang nhap');
-            }
+        if ($user->status == 0) {
+            Auth::guard('user')->logout();
+            return back()->with('error', 'Tài khoản đang chờ phê duyệt');
+        }
 
-            if($user->status == 3)
-            {
-                Auth::guard('user')->logout();
-                return redirect()->route('training.login')->with('error','Tai khoan cua ban Da bi khoa');
-            }
+        if ($user->status == 2) {
+            Auth::guard('user')->logout();
+            return back()->with('error', 'Tài khoản bị từ chối đăng nhập');
+        }
+
+        if ($user->status == 3) {
+            Auth::guard('user')->logout();
+            return back()->with('error', 'Tài khoản của bạn đã bị khóa');
         }
 
         return $next($request);

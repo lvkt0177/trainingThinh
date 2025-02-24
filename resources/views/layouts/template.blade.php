@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Trang chủ')</title>
+    <title>Training - @yield('title')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -64,7 +64,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto me-2">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
@@ -73,7 +73,7 @@
                 @auth
                     <ul class="navbar-nav">
                         <li class="nav-item d-flex align-items-center">
-                            <span class="text-light fw-semibold fs-5 me-3">Hello, {{$name}}</span>
+                            <a href="{{route('training.profile')}}" class="text-light fw-semibold fs-5 me-3 text-decoration-none"><i class="fa fa-user-circle" aria-hidden="true"></i> {{$name}}</a>
                             <a class="btn btn-danger px-4 py-2 rounded-pill" href="/logout">Log out</a>
                         </li>
                     </ul>
@@ -90,6 +90,19 @@
         </div>
     </nav>
     
+    @if (session('logout'))
+        <script>
+            alert('{{session('logout')}}');
+        </script>
+    @endif
+
+    @if (session('login'))
+        <script>
+            alert('{{session('login')}}');
+        </script>
+    @endif
+  
+
     
     <main class="container mt-4">
         @yield('content')

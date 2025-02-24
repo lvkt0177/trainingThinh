@@ -1,5 +1,5 @@
 @extends('layouts.template')
-
+@section('title','Login')
 @section('CSS')
     <style>
         .login-container {
@@ -36,12 +36,7 @@
 
 @section('content')
     
-    @if (session('success'))
-        <script>
-            alert("{{session('success')}}")
-            window.location.href = '/';
-        </script>
-    @endif
+
 
     <div class="d-flex justify-content-center align-items-center">
         <div class="login-container">
@@ -57,7 +52,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{route('training.login')}}">
+            <form method="POST" action="{{route('login')}}">
                 @csrf
                 <div class="mb-4">
                     <label for="email" class="form-label fw-semibold">Email Address</label>
@@ -72,7 +67,7 @@
                         <input type="checkbox" id="remember" class="form-check-input">
                         <label for="remember" class="form-check-label">Remember me</label>
                     </div>
-                    <a href="#" class="text-primary text-decoration-none">Forgot Password?</a>
+                    <a href="{{route('training.forgotPassword')}}" class="text-primary text-decoration-none">Forgot Password?</a>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
