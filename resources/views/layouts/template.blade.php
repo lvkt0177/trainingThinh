@@ -66,9 +66,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto me-2">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
+                    @auth
+                    <li class="nav-item"><a class="nav-link" href="{{route('training.posts')}}">Posts</a></li>
+                    @endauth
+                    {{-- <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li> --}}
                 </ul>
                 @auth
                     <ul class="navbar-nav">
@@ -137,6 +140,7 @@
 
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('JS')
     @stack('scripts')
 </body>
 </html>

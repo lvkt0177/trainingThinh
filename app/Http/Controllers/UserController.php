@@ -10,46 +10,29 @@ use App\Models\User;
 use App\Jobs\EmailSignUpJob;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\EmailSignUp;
+//Form request
+use App\Http\Requests\SignUpRequest;
 
 class UserController extends Controller
 {
     //
-   
-
     public function showSignUp()
     {
-        if(Auth::guard('user')->check())
-        {
-            return redirect()->route('training.home');
-        }
-
         return view('components.signup');
     }
 
 
-    public function signUp(Request $request)
+    public function signUp(SignUpRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|string|max:30',
-            'last_name' => 'required|string|max:30',
-            'email' => 'required|email|max:100|unique:users|lowercase',
-            'address' => 'required|string|min:5',
-            'password' => 'required|string|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
-            'confirm_password' => 'required|same:password',
-        ]);
-
         
-        $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'password' => $request->password,
-                'address' => $request->address,
-        ]);
+        $data = $request->only(['first_name','last_name','email','password','address']);
+        
+        $user = User::create($data);
 
         // dd($user);
 
         dispatch(new EmailSignUpJob($user));
+        
         // $tieuDe = 'Đăng ký thành công';
         // $noiDung = 'Chao mung';
         // Mail::to($user->email)->send(new EmailSignUp($user, $tieuDe, $noiDung));
@@ -71,21 +54,18 @@ class UserController extends Controller
         return view('components.editprofile',compact('user'));
     }
 
-    public function editProfile(Request $request)
+    public function editProfile(SignUpRequest $request)
     {
         $user = $request->only(['first_name','last_name','address']);
 
         $idUser = Auth::guard('user')->user()->id;
-
-        $validated = Validator::make($user,[
-            'first_name' => 'required|string|max:30',
-            'last_name' => 'required|string|max:30',
-            'address' => 'required|string|max:2000',
-        ])->validate();
       
-        User::where('id',$idUser)->update($validated);
+        User::where('id',$idUser)->update($user);
 
         return back()->with('success','Cập nhật hồ sơ thành công');
     }
+
+  
+
 
 }

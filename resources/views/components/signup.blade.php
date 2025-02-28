@@ -39,6 +39,7 @@
     </style>
 @endsection
 @section('content')
+
     <div class="container">
         @if (session('success'))
             <script>

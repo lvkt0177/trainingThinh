@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function ($view) {
             $user = Auth::guard('user')->user();
 
-            $name = $user ? $user->first_name . ' ' . $user->last_name : null;
+            $name = $user ? $user->name : null;
 
-             $view->with(compact('name'));
+            $view->with(compact('name'));
         });
     }
 }

@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
                     'first_name' => 'Le',
                     'last_name' => 'Thinh',
                     'email' => 'lvkt0177@gmail.com',
-                    'password' => Hash::make('T123@123'),
+                    'password' => Hash::make('Thinh3988@'),
                     'address' => 'Quan 4, TP.HCM',
                     'status' => 1,
                     'role' => 'user',

@@ -19,14 +19,10 @@ class UserAuthController extends Controller
 
     public function showLogin()
     {
-        if(Auth::guard('user')->check())
-        {
-            return redirect()->route('training.home');
-        }
         return view('components.login');
     }
 
-    public function  login(Request $request)
+    public function login(Request $request)
     {
         // dd($request);
         $account = $request->only('email','password');
