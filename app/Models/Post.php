@@ -9,10 +9,13 @@ use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+//Soft Delete
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Post extends Model implements HasMedia
 {
     //
-    use InteractsWithMedia, HasFactory;
+    use InteractsWithMedia, HasFactory, SoftDeletes;
     protected $table = 'posts';
 
     protected $fillable = ['user_id','title','slug','description','content','status','publish_date'];
@@ -55,6 +58,6 @@ class Post extends Model implements HasMedia
 
     public function getThumbnailAttribute()
     {
-        return $this->getFirstMediaUrl('thumbnails') ?: asset('images/thumnail_default.jpeg');
+        return $this->getFirstMediaUrl('thumbnails') ?: asset('images/thumbnail_default.jpg');
     }
 }

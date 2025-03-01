@@ -7,6 +7,9 @@
 @endsection
 
 @section('content')
+
+
+
     <div class="profile-container">
         <div class="profile-header">
             <div class="left">
@@ -16,7 +19,7 @@
                     <div class="username">{{$user->role}}</div>
                 </div>
             </div>
-            <a href="{{route('training.profile.edit')}}" class="btn-edit text-decoration-none"><i class="fas fa-edit"></i> Edit Profile</a>
+            <a href="{{route('training.profile.edit')}}" class="-edit text-decoration-none"><i class="fas fa-edit"></i> Edit Profile</a>
         </div>
 
         <div class="profile-info">
@@ -31,6 +34,8 @@
 
         <div class="profile-footer">
             <button class="btn"><i class="fas fa-lock"></i> Change Password</button>
+
+            <a href="{{route('training.posts.profile.trash')}}" class="btn"><i class="fa fa-trash" aria-hidden="true"></i> Posts Delete</a>
         </div>
     </div>
 

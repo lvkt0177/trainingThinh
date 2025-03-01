@@ -44,7 +44,7 @@
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm position-relative" style="height: 450px">
                         <img src="{{ $post->thumbnail }}"
-                            class="card-img-top" alt="Thumbnails" style="height: 250px; object-fit: cover;">
+                            class="card-img-top" alt="Thumbnails" style="height: 230px;width: 100%; object-fit: cover;">
                         <div class="card-body">
                             <h5 class="card-title">{{  Str::limit($post->title, 30) }}</h5>
                             <p class="text-muted" style="height: 40px">{{ Str::limit(strip_tags($post->description), 80) }}</p>
@@ -82,5 +82,10 @@
                 </div>
             @endforeach
         </div>
+
+        <div class="d-flex justify-content-center mt-3"> 
+            {{ $posts->links() }}
+        </div>
+
     </div>
 @endsection

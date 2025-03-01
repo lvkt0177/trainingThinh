@@ -23,7 +23,7 @@ class PostsController extends Controller
 
         $user = User::find($userID);
             
-        $posts = $user->posts()->orderBy('publish_date','desc')->get();
+        $posts = $user->posts()->orderBy('publish_date','desc')->paginate(6);
 
         // $posts = Post::where('user_id',$userID)->orderBy('publish_date','desc')->get();
     
@@ -67,7 +67,10 @@ class PostsController extends Controller
 
     public function createFakePost()
     {
-        Post::factory()->count(5)->create();
+        $userID = Auth::guard('user')->user()->id;
+        Post::factory()->count(5)->create([
+            'user_id' => $userID,
+        ]);
 
         return redirect()->route('training.posts')->with('success','Tạo bài viết giả thành công');
     }
@@ -79,12 +82,24 @@ class PostsController extends Controller
         {
             return view('error.pageerror');
         }
+        $userID = Auth::guard('user')->user()->id;
+
+        $trashedPost = Post::withTrashed()->where('slug',$slug)->first();
+
+        if($trashedPost != null && $trashedPost->user_id == $userID)
+        {
+            $post = $trashedPost;
+            return view('components.postdetail',compact('post'));
+        }
+        else if($trashedPost)
+        {
+            return view('error.pageerror');
+        }
 
         $post = Post::where('slug',$slug)->first();
 
         // dd($post->getFirstMediaUrl('thumbnails'));
 
-        $userID = Auth::guard('user')->user()->id;
 
         if($post->user_id != $userID)
         {
@@ -121,7 +136,9 @@ class PostsController extends Controller
             return view('error.pageerror');
         }
 
-        $post = Post::where('user_id',$userID)->delete();
+        $user = User::find($userID);
+
+        $post = $user->posts()->delete();
 
         if($post)
             return back()->with('success','Xoá tất cả bài viết thành công');
@@ -147,16 +164,9 @@ class PostsController extends Controller
             return view('error.pageerror');
     }
 
-    public function editPost(Request $request)
+    public function editPost(PostRequest $request)
     {
         // dd($request);
-
-        $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'string|max:200',
-            'content' => 'required',
-        ]);
-
         $userID = Auth::guard('user')->user()->id;
 
         $post = Post::where('slug',$request->slug)->first();
@@ -170,6 +180,14 @@ class PostsController extends Controller
                 'publish_date' => $request->publish_date ? $request->publish_date : null,
             ]);
 
+            if ($request->hasFile('thumbnail'))
+            {
+                $post->clearMediaCollection('thumbnail');
+
+                $post->addMedia($request->file('thumbnail'))->toMediaCollection('thumbnails','media-library');
+
+            }
+
         }
 
         if($post)
@@ -177,4 +195,27 @@ class PostsController extends Controller
         else
             return back()->with('error','Có lỗi xảy ra. Chỉnh sửa bài viết thất bại');
     }
+
+    public function showTrash()
+    {
+        $userID = Auth::guard('user')->user()->id;
+        $trashedPost = Post::where('user_id',$userID)->onlyTrashed()->paginate(6);
+        return view('components.postsDeleted',compact('trashedPost'));
+    }
+
+
+    public function restorePost(Request $request)
+    {
+        if($request == null)
+        {
+            return view('error.pageerror');
+        }
+
+        $post = Post::withTrashed()->where('slug',$request->slug)->restore();
+
+        if($post)
+            return back()->with('success','Khôi phục bài viết thành công');
+        else
+            return back()->with('error','Có lỗi xảy ra. Khôi phục bài viết thất bại');
+    }   
 }

@@ -12,13 +12,6 @@
             <a href="" class="btn btn-primary px-4 py-2 me-2">
                 <i class="fas fa-edit"></i> Edit
             </a>
-            <form action="/training/posts/delete/{{$post->slug}}" method="POST" class="d-inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger px-4 py-2">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </form>
         </div>
     </div>
     <div class="card shadow-lg border-0 overflow-hidden">

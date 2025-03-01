@@ -47,6 +47,11 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
 
     //Delete ALL
     Route::delete('/training/posts/deleteAll',[PostsController::class,'deleteAllPost'])->name('training.posts.deleteALL');
+
+    //POSTS DELETED (TRASH)
+    Route::get('/training/posts/profile/trash',[PostsController::class,'showTrash'])->name('training.posts.profile.trash');
+
+    Route::post('/training/posts/profile/restore',[PostsController::class,'restorePost'])->name('training.posts.restore');
 });
 
 Route::get('/',function(){

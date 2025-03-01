@@ -16,7 +16,7 @@
                 Back</a>
         </div>
 
-        <form method="POST" action="{{route('training.posts.edit.post')}}" id="createPost" class="mt-4">
+        <form method="POST" action="{{route('training.posts.edit.post')}}" onsubmit="return confirm('Bạn xác nhận muốn chỉnh sửa dữ liệu này?')" id="createPost" class="mt-4" enctype="multipart/form-data">
             @csrf
 
             <input type="hidden" name="slug" value="{{$post->slug}}">
@@ -38,9 +38,18 @@
             </div>
 
             <div class="mb-3">
+                <label for="thumbnail" class="form-label fw-semibold">Thumbnail</label>
+                <input type="file" class="form-control form-control-lg" id="thumbnail" value="{{ old('thumbnail') }}"
+                    name="thumbnail">
+                {{-- @error('thumbnail')
+                    <span class="text-danger">{{$message}}</span>
+                @enderror --}}
+            </div>
+
+            <div class="mb-3">
                 <label for="publish_date" class="form-label fw-semibold">Publish Date</label>
                 <div class="input-group">
-                    <input type="date" class="form-control" id="publish_date" name="publish_date" value="{{$post->publish_date}}"> 
+                    <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" value="{{$post->publish_date}}"> 
                     <label class="input-group-text"><i class="fas fa-calendar-alt"></i></label>
                 </div>
             </div>
