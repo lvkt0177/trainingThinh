@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\CheckLoginMiddleware;
+use App\Http\Middleware\AdminMiddleware;;
 
 //Media
 use Spatie\MediaLibrary\MediaLibraryServiceProvider;
@@ -28,5 +29,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'user.status' => UserMiddleware::class,
             'user.check-login' => CheckLoginMiddleware::class,
+            'admin.check-login' => AdminMiddleware::class,
         ]);
     })->create();

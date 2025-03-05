@@ -34,7 +34,6 @@
                         <label class="form-label">Address</label>
                         <input type="text" class="form-control" name="address" value="{{ $user->address }}">
                         @error('email') <span class="text-danger">{{$message}}</span> @enderror
-
                     </div>
 
                         @if (session('success'))

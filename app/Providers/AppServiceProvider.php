@@ -23,10 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Paginator::useBootstrap();
+
         view()->composer('*', function ($view) {
             $user = Auth::guard('user')->user();
 
-            $name = $user ? $user->name : null;
+            $name = $user ? $user->full_name : "User";
 
             $view->with(compact('name'));
         });

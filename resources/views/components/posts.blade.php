@@ -31,10 +31,10 @@
     </div>
 
     <div class="">
-        <form method="POST" action="{{ route('training.posts.deleteALL') }}">
+        <form method="POST" action="{{ route('training.posts.deleteALL') }}" onsubmit="return confirm('Bạn xác nhận xoá tất cả bài viết?')" >
             @csrf
             @method('DELETE')
-            <button type="submit" onsubmit="return comfirm('Bạn xác nhận xoá tất cả bài viết?')" style="border:none;"
+            <button type="submit" style="border:none;"
                 class=" text-danger fs-5 p-0 mb-3">Delete All</button>
         </form>
     </div>

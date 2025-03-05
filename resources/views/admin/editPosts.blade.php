@@ -1,29 +1,39 @@
-@extends('layouts.template')
+@extends('layouts.admin')
 
-@section('title', 'Create A New Post')
 
-@section('CSS')
+@section('css')
     <!-- QuillJS Full Feature -->
     <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
 @endsection
 
 @section('content')
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4 mx-auto col-md-12">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
-                <h3 class="fw-bold">Create a New Post</h3>
-                <a href="{{ route('training.posts') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i>
-                    Back</a>
-            </div>
+    <div class="my-3">
+        <a href="/admin/posts" class="ms-1 btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
 
-            <form method="POST" action="{{ route('training.posts.create.post') }}" id="createPost" class="mt-4"
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <script>
+                alert('{{ session('success') }}');
+            </script>
+        </div>
+    @endif
+
+    <div class="">
+        <h3 class="fw-bold mt-3">Chỉnh sửa bài viết - {{ $post->title }}</h3>
+        <div class="form-edit">
+            <form method="POST" action="{{ route('admin.posts.edit.post') }}"
+                onsubmit="return confirm('Bạn xác nhận muốn chỉnh sửa dữ liệu này?')" id="createPost" class="mt-4"
                 enctype="multipart/form-data">
                 @csrf
+
+                <input type="hidden" name="slug" value="{{ $post->slug }}">
 
                 <div class="mb-3">
                     <label for="title" class="form-label fw-semibold">Title</label>
                     <input type="text" class="form-control form-control-lg" id="title" name="title"
-                        placeholder="Enter a compelling title..." value="{{ old('title') }}" required>
+                        placeholder="Enter a compelling title..." value="{{ old('title', $post->title) }}" required>
                     @error('title')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -32,26 +42,34 @@
                 <div class="mb-3">
                     <label for="description" class="form-label fw-semibold">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="8"
-                        placeholder="Write your description...">{{ old('description') }}</textarea>
+                        placeholder="Write your description...">{{ old('description', $post->description) }}</textarea>
                     @error('description')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="1" {{ $post->status == 1 ? 'selected' : '' }}>Published</option>
+                        <option value="0" {{ $post->status == 0 ? 'selected' : '' }}>Draft</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label for="thumbnail" class="form-label fw-semibold">Thumbnail</label>
-                    <input type="file" class="form-control form-control-lg" id="thumbnail" value="{{ old('thumbnail') }}"
-                        name="thumbnail">
-                    {{-- @error('thumbnail')
-                        <span class="text-danger">{{$message}}</span>
-                    @enderror --}}
+                    <input type="file" class="form-control form-control-lg" id="thumbnail"
+                        value="{{ old('thumbnail') }}" name="thumbnail">
+
+                    <img class="my-2 rounded" style="width: 200px" src="{{ asset($post->thumbnail) }}" alt="">
+
                 </div>
 
                 <div class="mb-3">
                     <label for="publish_date" class="form-label fw-semibold">Publish Date</label>
                     <div class="input-group">
-                        <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" max="{{ now()->format('Y-m-d\TH:i') }}"
-                            value="{{ old('publish_date') }}">
+                        <input type="datetime-local" class="form-control" id="publish_date" name="publish_date"
+                            value="{{ $post->publish_date }}">
                         <label class="input-group-text"><i class="fas fa-calendar-alt"></i></label>
                     </div>
                 </div>
@@ -59,23 +77,22 @@
                 <div class="mb-3">
                     <label for="content" class="form-label fw-semibold">Content</label>
                     <div id="editor" style="height: 800px"></div>
-                    <input type="hidden" name="content" id="hiddenContent" value="{{ old('content') }}">
+                    <input type="hidden" name="content" id="hiddenContent">
                     @error('content')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Publish</button>
+                <div class="my-2 gap-2">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Edit</button>
                 </div>
             </form>
         </div>
     </div>
-
 @endsection
 
 
-@section('JS')
+@section('js')
     <!-- QuillJS Core -->
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
@@ -83,10 +100,7 @@
     <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill-table@1.2.9/dist/quill-table.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill-mention@2.1.0/dist/quill.mention.min.js"></script>
-
     <script>
-        var ImageResize = Quill.import("modules/imageResize");
-
         var quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
@@ -151,16 +165,11 @@
             }
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            var oldContent = document.getElementById("hiddenContent").value;
+        quill.root.innerHTML = `{!! addslashes($post->content) !!}`;
 
-            if (oldContent) {
-                quill.root.innerHTML = oldContent;
-            }
-        });
-
-        quill.on('text-change', function() {
-            document.querySelector('#hiddenContent').value = quill.root.innerHTML;
-        });
+        document.getElementById('createPost').onsubmit = function() {
+            var content = document.querySelector('input[name=content]');
+            content.value = quill.root.innerHTML;
+        }
     </script>
 @endsection

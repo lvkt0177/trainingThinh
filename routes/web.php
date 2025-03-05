@@ -7,12 +7,22 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\AdminController;
 
 use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\CheckLoginMiddleware;
-
+use App\Http\Middleware\AdminMiddleware;
 
 // * User -----------------------------------------------------------------------------------------------------
+Route::get('/',function(){
+    return view('components.index');
+})->name('training.home');
+
+Route::get('/news',[NewsController::class,'showNews'])->name('training.news');
+
+//Detail
+Route::get('/training/posts/detail/{slug?}',[PostsController::class,'details']);
 
 Route::middleware(['auth:user', 'user.status'])->group(function () {
     //Profile
@@ -31,6 +41,7 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
 
     //Create Fake Post (Factory)
     Route::post('/training/posts/fake',[PostsController::class,'createFakePost'])->name('training.posts.create.fake');
+    
     //EDIT
     Route::get('/training/posts/{slug?}',[PostsController::class,'showEditPost']);
 
@@ -38,9 +49,6 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
 
      //Create
     Route::post('/training/posts/create',[PostsController::class,'createPost'])->name('training.posts.create.post');
-
-    //Detail
-    Route::get('/training/posts/detail/{slug?}',[PostsController::class,'details']);
 
     //Delete
     Route::delete('/training/posts/delete/{slug?}',[PostsController::class,'deletePost']);
@@ -52,11 +60,12 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
     Route::get('/training/posts/profile/trash',[PostsController::class,'showTrash'])->name('training.posts.profile.trash');
 
     Route::post('/training/posts/profile/restore',[PostsController::class,'restorePost'])->name('training.posts.restore');
+
+    //Restore ALL
+    Route::post('/training/posts/profile/restoreAll',[PostsController::class,'restoreAllPost'])->name('training.posts.restoreAll');
 });
 
-Route::get('/',function(){
-    return view('components.index');
-})->name('training.home');
+
  
 Route::middleware(['user.check-login'])->group(function(){
     //LOGIN
@@ -73,6 +82,8 @@ Route::middleware(['user.check-login'])->group(function(){
 //LOGOUT
 Route::get('/logout',[UserAuthController::class,'logout'])->name('training.logout');
 
+Route::post('/logout',[UserAuthController::class,'logout'])->name('training.logout.post');
+
 //FORGOT PASSWORD
 Route::get('/forgot-password',[UserAuthController::class,'showForgotPassword'])->name('training.forgotPassword');
 
@@ -83,12 +94,10 @@ Route::get('/reset-password', [UserAuthController::class,'showResetPassword'])->
 
 Route::post('/reset-password',[UserAuthController::class,'resetPassword'])->name('training.resetPassword.post');
 
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-});
-
 //404
-Route::get('/page-not-found',[Controller::class,'pageNotFound'])->name('training.404');
+Route::get('/page-not-found',function (){
+    return view('error.pageerror');
+})->name('training.404');
 
 Route::get('/send-test-email', function () {
     Mail::raw('Xin chao (Mail Test)', function ($message) {
@@ -97,3 +106,37 @@ Route::get('/send-test-email', function () {
 
     return 'Email đã gửi!';
 });
+
+// * Admin -----------------------------------------------------------------------------------------------------
+Route::get('/admin/login',[AdminController::class,'showLogin'])->name('admin.login');
+
+Route::post('/admin/login',[AdminController::class,'login'])->name('admin.login.post');
+
+Route::middleware(['admin.check-login'])->group(function(){
+    Route::get('/admin', [AdminController::class,'showDashboard'])->name('admin.dashboard');
+
+    //admin posts
+    Route::get('/admin/posts',[AdminController::class,'showPosts'])->name('admin.posts');
+
+    //admin users
+    Route::get('/admin/users',[AdminController::class,'showUsers'])->name('admin.users');
+    //--------------------------------------------------------------------------------------------------------------
+    //Posts
+    //Search post
+    Route::get('/admin/posts/search',[AdminController::class,'searchPost'])->name('admin.posts.search');
+
+    //Edit Post
+    Route::get('/admin/posts/edits/{slug?}',[AdminController::class,'showEditPost']);
+
+    Route::post('/admin/posts/edits',[AdminController::class,'editPost'])->name('admin.posts.edit.post');
+
+    //--------------------------------------------------------------------------------------------------------------
+    //User 
+    Route::get('/admin/users/edit/{id?}',[AdminController::class,'showEditUser']);
+
+    Route::post('/admin/users/edit',[AdminController::class,'editUser'])->name('admin.users.edit.post');
+
+    //Search user
+    Route::post('/admin/users/search',[AdminController::class,'searchUser'])->name('admin.users.search');
+});
+

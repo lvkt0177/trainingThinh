@@ -5,14 +5,17 @@
 @section('content')
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center my-4">
-        <a href="{{route('training.posts')}}" class="btn btn-outline-secondary px-4 py-2">
-            <i class="fas fa-arrow-left"></i> Back to Blog
-        </a>
-        <div>
-            <a href="" class="btn btn-primary px-4 py-2 me-2">
-                <i class="fas fa-edit"></i> Edit
+        @auth
+            <a href="{{route('training.posts')}}" class="btn btn-outline-secondary px-4 py-2">
+                <i class="fas fa-arrow-left"></i> Back to Blog
             </a>
-        </div>
+        @endauth
+
+        @guest
+            <a href="/news" class="btn btn-outline-secondary px-4 py-2">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        @endguest
     </div>
     <div class="card shadow-lg border-0 overflow-hidden">
         <img src="{{$post->thumbnail}}" class="card-img-top" alt="Post Image" style="height: 450px; object-fit: cover;">
@@ -23,7 +26,7 @@
             </div>
             <hr>
             <div class="post-content fs-5 lh-lg">
-               {!! $post->content !!}
+               {!! Purifier::clean($post->content) !!}
             </div>
             <hr>
             

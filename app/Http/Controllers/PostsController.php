@@ -7,7 +7,7 @@ use Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Post;
-
+use Mews\Purifier\Facades\Purifier;
 //Factory
 use Database\Factories\PostFactory;
 
@@ -82,16 +82,19 @@ class PostsController extends Controller
         {
             return view('error.pageerror');
         }
-        $userID = Auth::guard('user')->user()->id;
+
+        $userID = Auth::guard('user')->check() ? Auth::guard('user')->user()->id : null;
+
 
         $trashedPost = Post::withTrashed()->where('slug',$slug)->first();
 
-        if($trashedPost != null && $trashedPost->user_id == $userID)
+        if($trashedPost->deleted_at != null && $trashedPost->user_id == $userID)
         {
             $post = $trashedPost;
             return view('components.postdetail',compact('post'));
         }
-        else if($trashedPost)
+        
+        if($trashedPost->deleted_at)
         {
             return view('error.pageerror');
         }
@@ -100,16 +103,18 @@ class PostsController extends Controller
 
         // dd($post->getFirstMediaUrl('thumbnails'));
 
-
-        if($post->user_id != $userID)
+        if($post->user_id == $userID)
         {
-            return view('error.pageerror');
+            return view('components.postdetail',compact('post'));
         }
 
-        if($post)
+        if(($post->user_id != $userID && $post->status == 1) || ($userID == null && $post->status == 1))
+        {
             return view('components.postdetail',compact('post'));
-        else
-            return view('error.pageerror');
+        }
+
+   
+        return view('error.pageerror');
     }
     
 
@@ -153,10 +158,14 @@ class PostsController extends Controller
             return view('error.pageerror');
         }
 
+        $userID = Auth::guard('user')->user()->id;
         $post = Post::where('slug',$slug)->first();
 
-        if($post->publish_date != null)
-            $post->publish_date = optional(Carbon::parse($post->publish_date))->format('Y-m-d');
+        if($post->user_id != $userID)
+        {
+            return view('error.pageerror');
+        }
+
 
         if($post)
             return view('components.editPost',compact('post'));
@@ -170,21 +179,23 @@ class PostsController extends Controller
         $userID = Auth::guard('user')->user()->id;
 
         $post = Post::where('slug',$request->slug)->first();
-
+        $content = Purifier::clean($request->input('content'));
         if($post)
         {
             $post->update([
                 'title' => $request->title,
                 'description' => $request->description,
-                'content' => $request->content,
+                'status' => 0,
+                'content' => $content,
                 'publish_date' => $request->publish_date ? $request->publish_date : null,
             ]);
 
             if ($request->hasFile('thumbnail'))
             {
-                $post->clearMediaCollection('thumbnail');
+                $post->clearMediaCollection('thumbnails');
 
-                $post->addMedia($request->file('thumbnail'))->toMediaCollection('thumbnails','media-library');
+                $post->addMedia($request->file('thumbnail'))
+                    ->toMediaCollection('thumbnails', 'media-library');
 
             }
 
@@ -218,4 +229,20 @@ class PostsController extends Controller
         else
             return back()->with('error','Có lỗi xảy ra. Khôi phục bài viết thất bại');
     }   
+
+    public function restoreAllPost()
+    {
+        $userID = Auth::guard('user')->user()->id;
+        if($userID == null)
+        {
+            return view('error.pageerror');
+        }
+
+        $post = Post::withTrashed()->restore();
+
+        if($post)
+            return back()->with('success','Khôi phục tất cả bài viết thành công');
+        else
+            return back()->with('error','Có lỗi xảy ra. Khôi phục thất bại');
+    }
 }

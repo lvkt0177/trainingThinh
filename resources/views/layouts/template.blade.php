@@ -68,9 +68,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto me-2">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/news">News</a></li>
                     @auth
-                    <li class="nav-item"><a class="nav-link" href="{{route('training.posts')}}">Posts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('training.posts')}}">Your Posts</a></li>
                     @endauth
+
                     {{-- <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li> --}}

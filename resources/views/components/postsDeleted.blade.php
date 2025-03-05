@@ -18,6 +18,10 @@
 
 <div class="container">
     <p class="fs-4 fw-bold">Trashed Post</p>
+    <form action="{{route('training.posts.restoreAll')}}" method="post">
+        @csrf
+        <button class="btn btn-danger" type="submit">Restore All Post</button>
+    </form>
 </div>
 
 <div class="container mt-1">
