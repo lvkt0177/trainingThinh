@@ -78,21 +78,18 @@ class PostsController extends Controller
       //DETAIL
     public function details($slug = null)
     {
+        //Slug null
         if($slug == null)
         {
             return view('error.pageerror');
         }
 
+       
         $userID = Auth::guard('user')->check() ? Auth::guard('user')->user()->id : null;
+        
+        $comments = Post::where('slug',$slug)->first()->comments()->orderBy('created_at','desc')->get();
 
-
-        $trashedPost = Post::withTrashed()->where('slug',$slug)->first();
-
-        if($trashedPost->deleted_at != null && $trashedPost->user_id == $userID)
-        {
-            $post = $trashedPost;
-            return view('components.postdetail',compact('post'));
-        }
+        $trashedPost = Post::withTrashed()->where('slug', $slug)->first();
         
         if($trashedPost->deleted_at)
         {
@@ -105,14 +102,13 @@ class PostsController extends Controller
 
         if($post->user_id == $userID)
         {
-            return view('components.postdetail',compact('post'));
+            return view('components.postdetail',compact('post','comments'));
         }
 
-        if(($post->user_id != $userID && $post->status == 1) || ($userID == null && $post->status == 1))
+        if(($post->user_id != $userID && $post->status->value == 1) || ($userID == null && $post->status->value == 1))
         {
-            return view('components.postdetail',compact('post'));
+            return view('components.postdetail',compact('post','comments'));
         }
-
    
         return view('error.pageerror');
     }
@@ -180,6 +176,7 @@ class PostsController extends Controller
 
         $post = Post::where('slug',$request->slug)->first();
         $content = Purifier::clean($request->input('content'));
+        
         if($post)
         {
             $post->update([

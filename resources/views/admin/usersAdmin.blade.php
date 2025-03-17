@@ -56,17 +56,11 @@
                         <td>{{ $item->email }}</td>
                         <td style="width: 250px">{{ $item->address, 50 }} </td>
                         <td>
-                            {{ match ($item->status) {
-                                0 => 'Chờ phê duyệt',
-                                1 => 'Được phê duyệt',
-                                2 => 'Bị từ chối',
-                                3 => 'Bị khóa',
-                                default => 'None',
-                            } }}
+                            {{ $item->status->label() }}
                         </td>
                         <td>
                             <div class="d-flex">
-                                <a href="/admin/users/edit/{{ $item->id }}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                <a href="{{route('admin.users.edit',['id' => $item->id ])}}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
 
                             </div>
                         </td>

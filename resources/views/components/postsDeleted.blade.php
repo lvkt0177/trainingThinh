@@ -36,9 +36,7 @@
                         <h5 class="card-title">{{  Str::limit($post->title, 30) }}</h5>
                         <p class="text-muted" style="height: 40px">{{ Str::limit(strip_tags($post->description), 80) }}</p>
                         <div class="d-flex justify-content-between">
-                            <a href="/training/posts/detail/{{ $post->slug }}"
-                                class="btn btn-sm btn-outline-primary"><i class="fa fa-eye" aria-hidden="true"></i>
-                                Read More</a>
+
                             <span class="text-muted small"><b><i class="fas fa-calendar-alt me-2"></i> </b>
                                 {{ $post->publish_date }}</span>
                         </div>

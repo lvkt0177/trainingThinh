@@ -3,7 +3,10 @@
 
 @section('css')
     <!-- QuillJS Full Feature -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet"> --}}
+
+    {{-- SummerNote --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -51,8 +54,10 @@
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
                     <select name="status" id="status" class="form-control">
-                        <option value="1" {{ $post->status == 1 ? 'selected' : '' }}>Published</option>
-                        <option value="0" {{ $post->status == 0 ? 'selected' : '' }}>Draft</option>
+                        @foreach ($postsStatus as $status)
+                            <option value="{{ $status->value }}" {{$post->status == $status->value ? 'selected' : '' }}>{{$status->label()}}</option>
+                        @endforeach
+
                     </select>
                 </div>
 
@@ -62,7 +67,6 @@
                         value="{{ old('thumbnail') }}" name="thumbnail">
 
                     <img class="my-2 rounded" style="width: 200px" src="{{ asset($post->thumbnail) }}" alt="">
-
                 </div>
 
                 <div class="mb-3">
@@ -76,8 +80,10 @@
 
                 <div class="mb-3">
                     <label for="content" class="form-label fw-semibold">Content</label>
-                    <div id="editor" style="height: 800px"></div>
-                    <input type="hidden" name="content" id="hiddenContent">
+                    {{-- <div id="editor" style="height: 800px"></div>
+                    <input type="hidden" name="content" id="hiddenContent"> --}}
+                    <textarea id="editor" name="content" >{{ old('content', $post->content) }}</textarea>
+
                     @error('content')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -93,7 +99,30 @@
 
 
 @section('js')
-    <!-- QuillJS Core -->
+     {{-- SummerNote --}}
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+ 
+     <script>
+         $(document).ready(function() {
+             $('#editor').summernote({
+                 height: 900, // Chiều cao khung soạn thảo
+                 placeholder: 'Nhập nội dung...',
+                 tabsize: 2,
+                 toolbar: [
+                     ['style', ['bold', 'italic', 'underline', 'clear']],
+                     ['font', ['strikethrough', 'superscript', 'subscript']],
+                     ['para', ['ul', 'ol', 'paragraph']],
+                     ['insert', ['link', 'picture', 'video']],
+                     ['view', ['fullscreen', 'codeview', 'help']]
+                 ]
+             });
+         });
+ 
+     </script>    
+ 
+
+    {{-- <!-- QuillJS Core -->
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
     <!-- QuillJS Extensions -->
@@ -171,5 +200,5 @@
             var content = document.querySelector('input[name=content]');
             content.value = quill.root.innerHTML;
         }
-    </script>
+    </script> --}}
 @endsection

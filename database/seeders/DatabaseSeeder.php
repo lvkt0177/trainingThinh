@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\UserSeeder;
 use Database\Seeders\PostsSeeder;
+use Database\Seeders\CommentSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,9 +19,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call([
+        $this->call(
+        [
             UserSeeder::class,
             PostsSeeder::class,
-        ]);
+            CommentSeeder::class,
+        ]
+    );
+
+
     }
 }

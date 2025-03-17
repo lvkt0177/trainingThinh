@@ -49,27 +49,27 @@
                             <h5 class="card-title">{{  Str::limit($post->title, 30) }}</h5>
                             <p class="text-muted" style="height: 40px">{{ Str::limit(strip_tags($post->description), 80) }}</p>
                             <div class="d-flex justify-content-between">
-                                <a href="/training/posts/detail/{{ $post->slug }}"
+                                <a href="{{route('training.posts.detail',['slug' => $post->slug ])}}"
                                     class="btn btn-sm btn-outline-primary"><i class="fa fa-eye" aria-hidden="true"></i>
                                     Read More</a>
                                 <span class="text-muted small"><b><i class="fas fa-calendar-alt me-2"></i> </b>
                                     {{ $post->publish_date }}</span>
                             </div>
                             <div class="">
-                                @if ($post->status == 0)
+                                @if ($post->status->value == 0)
                                     <span class="badge bg-success my-3">Bài viết này đang chờ được phê duyệt</span>
                                 @endif
 
-                                @if ($post->status == 1)
+                                @if ($post->status->value == 1)
                                     <span class="badge bg-primary my-3">Bài viết này đã được phê duyệt</span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="position-absolute top-0 end-0 p-2">
-                            <a href="/training/posts/{{ $post->slug }}" class="btn btn-sm btn-warning me-1"><i
+                            <a href="{{route('training.posts.edit',['slug'=>$post->slug])}}" class="btn btn-sm btn-warning me-1"><i
                                     class="fas fa-edit"></i></a>
-                            <form action="/training/posts/delete/{{ $post->slug }}" method="POST" class="d-inline">
+                            <form action="{{route('training.posts.delete',['slug' => $post->slug])}}" method="POST" class="d-inline">  
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger"

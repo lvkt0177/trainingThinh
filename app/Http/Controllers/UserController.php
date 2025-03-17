@@ -31,7 +31,7 @@ class UserController extends Controller
 
         // dd($user);
 
-        dispatch(new EmailSignUpJob($user));
+        dispatch(new EmailSignUpJob($user));    
         
         // $tieuDe = 'Đăng ký thành công';
         // $noiDung = 'Chao mung';
@@ -65,6 +65,6 @@ class UserController extends Controller
         return back()->with('success','Cập nhật hồ sơ thành công');
     }
 
-  
+    
 
 }

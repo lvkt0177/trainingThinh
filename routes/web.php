@@ -9,6 +9,7 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommentController;
 
 use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\CheckLoginMiddleware;
@@ -22,7 +23,7 @@ Route::get('/',function(){
 Route::get('/news',[NewsController::class,'showNews'])->name('training.news');
 
 //Detail
-Route::get('/training/posts/detail/{slug?}',[PostsController::class,'details']);
+Route::get('/training/posts/detail/{slug?}',[PostsController::class,'details'])->name('training.posts.detail');
 
 Route::middleware(['auth:user', 'user.status'])->group(function () {
     //Profile
@@ -43,7 +44,7 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
     Route::post('/training/posts/fake',[PostsController::class,'createFakePost'])->name('training.posts.create.fake');
     
     //EDIT
-    Route::get('/training/posts/{slug?}',[PostsController::class,'showEditPost']);
+    Route::get('/training/posts/{slug?}',[PostsController::class,'showEditPost'])->name('training.posts.edit');
 
     Route::post('/training/posts/edit',[PostsController::class,'editPost'])->name('training.posts.edit.post');
 
@@ -51,7 +52,7 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
     Route::post('/training/posts/create',[PostsController::class,'createPost'])->name('training.posts.create.post');
 
     //Delete
-    Route::delete('/training/posts/delete/{slug?}',[PostsController::class,'deletePost']);
+    Route::delete('/training/posts/delete/{slug?}',[PostsController::class,'deletePost'])->name('training.posts.delete');
 
     //Delete ALL
     Route::delete('/training/posts/deleteAll',[PostsController::class,'deleteAllPost'])->name('training.posts.deleteALL');
@@ -63,6 +64,11 @@ Route::middleware(['auth:user', 'user.status'])->group(function () {
 
     //Restore ALL
     Route::post('/training/posts/profile/restoreAll',[PostsController::class,'restoreAllPost'])->name('training.posts.restoreAll');
+
+    //Comments
+    Route::post('/training/posts/detail/comment',[CommentController::class,'addComment'])->name('training.posts.comment.post');
+
+    Route::delete('/training/posts/detail/comment/{comment}',[CommentController::class,'deleteComment'])->name('training.posts.comment.delete');
 });
 
 
@@ -126,13 +132,13 @@ Route::middleware(['admin.check-login'])->group(function(){
     Route::get('/admin/posts/search',[AdminController::class,'searchPost'])->name('admin.posts.search');
 
     //Edit Post
-    Route::get('/admin/posts/edits/{slug?}',[AdminController::class,'showEditPost']);
+    Route::get('/admin/posts/edits/{slug?}',[AdminController::class,'showEditPost'])->name('admin.posts.edits');
 
     Route::post('/admin/posts/edits',[AdminController::class,'editPost'])->name('admin.posts.edit.post');
 
     //--------------------------------------------------------------------------------------------------------------
     //User 
-    Route::get('/admin/users/edit/{id?}',[AdminController::class,'showEditUser']);
+    Route::get('/admin/users/edit/{id?}',[AdminController::class,'showEditUser'])->name('admin.users.edit');
 
     Route::post('/admin/users/edit',[AdminController::class,'editUser'])->name('admin.users.edit.post');
 

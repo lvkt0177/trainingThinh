@@ -96,6 +96,42 @@
             </div>
         </div>
     </nav>
+
+    @if (session('success'))
+        <div id="success-alert"
+            class="position-fixed end-0 bottom-0 mb-3 me-3 p-3 alert alert-success shadow-lg  fade show d-flex align-items-center"
+            role="alert" style="display: none; min-width: 400px;z-index:999;">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+        </div>
+
+        <script>
+            let alertBox = document.getElementById("success-alert");
+
+            alertBox.style.display = "block";
+
+            setTimeout(() => {
+                alertBox.classList.remove("show");
+                setTimeout(() => alertBox.style.display = "none", 500);
+            }, 4000);
+        </script>
+    @endif
+
+    @if (session('error'))
+        <div id="error-alert"
+            class="position-fixed bottom-4 end-0 mb-3 me-3 p-3 alert alert-danger shadow-lg fade show d-flex align-items-center"
+            role="alert" style="display: none; min-width: 400px; z-index: 999;">
+            <i class="bi bi-x-circle-fill me-2"></i> {{ session('error') }}
+        </div>
+
+        <script>
+            let alertBox = document.getElementById("error-alert");
+            alertBox.style.display = "block";
+            setTimeout(() => {
+                alertBox.classList.remove("show");
+                setTimeout(() => alertBox.style.display = "none", 500);
+            }, 4000);
+        </script>
+    @endif
     
     @if (session('logout'))
         <script>

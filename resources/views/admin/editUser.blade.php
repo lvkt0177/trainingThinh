@@ -38,14 +38,20 @@
 
             <div class="mb-3">
                 <label class="form-label">Status</label>
+
                 <select name="status" id="status" class="form-control">
-                    <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Chờ phê duyệt</option>
-                    <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Được phê duyệt</option>
-                    <option value="2" {{ $user->status == 2 ? 'selected' : '' }}>Bị từ chối</option>
-                    <option value="3" {{ $user->status == 3 ? 'selected' : '' }}>Bị khóa</option>
-                </select>   
+
+                    @foreach ($userStatus as $status)
+                        @if ($user->status->value == 0 || $status->value != 0)
+                            <option value="{{ $status->value }}" {{ $user->status === $status ? 'selected' : '' }}>
+                                {{ $status->label() }}
+                            </option>
+                        @endif
+                    @endforeach
+
+                </select>
             </div>
-           
+
             <div class="mb-3">
                 <label class="form-label">Address</label>
                 <input type="text" class="form-control" name="address" value="{{ $user->address }}">
@@ -54,7 +60,7 @@
                 @endif
             </div>
 
-           
+
 
             @if (session('success'))
                 <div class="alert alert-success text-center" role="alert">

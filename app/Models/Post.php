@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasSlug;
 use App\Traits\HasAttribute;
 
+//Enums
+use App\Enums\PostsStatus;
 class Post extends Model implements HasMedia
 {
     //
@@ -23,7 +25,9 @@ class Post extends Model implements HasMedia
     protected $table = 'posts';
 
     protected $fillable = ['user_id','title','slug','description','content','status','publish_date'];
-
+    protected $casts = [
+        'status' => PostsStatus::class,
+    ];
     public $timestamps = true;
  
     public function user()
@@ -31,10 +35,16 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(User::class,'user_id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function scopeStatus($query, $status)
     {
         return $query->where('status',$status);
     }
+
 
 
     

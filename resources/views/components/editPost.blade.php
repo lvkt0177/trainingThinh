@@ -4,7 +4,10 @@
 
 @section('CSS')
     <!-- QuillJS Full Feature -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet"> --}}
+
+    {{-- SummerNote --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -56,8 +59,10 @@
             
             <div class="mb-3">
                 <label for="content" class="form-label fw-semibold">Content</label>
-                <div id="editor" style="height: 800px"></div>
-                <input type="hidden" name="content" id="hiddenContent">
+                {{-- <div id="editor" style="height: 800px"></div>
+                <input type="hidden" name="content" id="hiddenContent"> --}}
+                <textarea id="editor" name="content" >{{ old('content', $post->content) }}</textarea>
+
                 @error('content')
                     <span class="text-danger">{{$message}}</span>
                 @enderror
@@ -74,14 +79,37 @@
 
 
 @section('JS')
-    <!-- QuillJS Core -->
+
+    {{-- SummerNote --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#editor').summernote({
+                height: 1200, // Chiều cao khung soạn thảo
+                placeholder: 'Nhập nội dung...',
+                tabsize: 2,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        });
+
+    </script>
+    
+    {{-- <!-- QuillJS Core -->
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
     <!-- QuillJS Extensions -->
     <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill-table@1.2.9/dist/quill-table.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/quill-mention@2.1.0/dist/quill.mention.min.js"></script>
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-mention@2.1.0/dist/quill.mention.min.js"></script> --}}
+    {{-- <script>
         var quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
@@ -152,5 +180,8 @@
             var content = document.querySelector('input[name=content]');
             content.value = quill.root.innerHTML;
         }
-    </script>
+    </script> --}}
+
+
+
 @endsection

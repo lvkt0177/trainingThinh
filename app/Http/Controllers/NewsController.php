@@ -10,7 +10,7 @@ class NewsController extends Controller
     //
     public function showNews()
     {
-        $posts = Post::where('status',1)->orderBy('publish_date','desc')->get();
+        $posts = Post::where('status', 1)->orderBy('publish_date','desc')->get();
 
 
         if($posts)

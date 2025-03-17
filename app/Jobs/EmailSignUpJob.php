@@ -16,12 +16,15 @@ use Illuminate\Queue\SerializesModels;
 
 class EmailSignUpJob implements ShouldQueue
 {
+    protected $queue = 'email';
     use Dispatchable, Queueable, InteractsWithQueue, SerializesModels;
 
     protected $user;
+
     /**
      * Create a new job instance.
      */
+
     public function __construct($user)
     {
         //

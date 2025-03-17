@@ -5,17 +5,10 @@
     <h3 class="my-2">Quản lý bài viết</h3>
 
     <div class="search mb-3">
-        <form action="{{route('admin.posts.search')}}" method="GET">
+        <form action="{{route('admin.posts.search')}}" class="" method="GET">
             @csrf
             <div class="d-flex">
-                <div class="col-2">
-                    <select name="type_search" id="type-search" class="form-control">
-                        <option value="tieuDe">Tiêu đề</option>
-                        <option value="email">Email</option>
-                    </select>
-                </div>
-
-                <div class="col-6">
+                <div class="col-6 m-0 p-0">
                     <input type="text" class="form-control" value="{{ request('search') }}" name="search" placeholder="Nhập từ khóa tìm kiếm">
                 </div>
 
@@ -56,11 +49,10 @@
                         <td style="width: 400px">{{$item->description}}</td>
                         <td>{{$item->user->email}}</td>
                         <td>{{$item->publish_date}}</td>
-                        <td>{{$item->status == 1 ? "Đã duyệt" : "Đang chờ duyệt"}}</td>
+                        <td>{{$item->status->label()}}</td>
                         <td>
                             <div class="d-flex">
-                                <a href="/admin/posts/edits/{{$item->slug}}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                    
+                                <a href="{{route('admin.posts.edits',['slug' => $item->slug])}}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
                             </div>
                         </td>
                     </tr>

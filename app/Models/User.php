@@ -6,12 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Traits\HasAttribute;
 
-
+use App\Enums\UserStatus;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasAttribute;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +27,10 @@ class User extends Authenticatable
         'address',
         'status',
         'role',
+    ];
+
+    protected $casts = [
+        'status' => UserStatus::class,
     ];
     
 
@@ -56,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class,'user_id');
     }   
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'user_id');
+    }
 }

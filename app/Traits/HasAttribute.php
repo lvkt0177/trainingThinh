@@ -18,4 +18,12 @@ trait HasAttribute
         );
     }
     
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ucfirst($this->first_name . ' ' . $this->last_name) ?: "User"
+        );
+    }
+
 }

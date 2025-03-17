@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailPost;
 use App\Jobs\PostsJob;
 
+use App\Enums\UserStatus;
 
+use App\Enums\PostsStatus;
 
 class AdminController extends Controller
 {
@@ -39,27 +41,17 @@ class AdminController extends Controller
 
     public function searchPost(Request $request)
     {
+        // dd($request->search);
         $search = $request->search ? "$request->search" : '';
-        $type_search = $request->type_search ? "$request->type_search" : '';
-        
-        if($request->type_search == 'tieuDe')
-        {        
-            $query = Post::with('user')
-            ->where('title','LIKE',"%$search%");
-
-        }   
-        
-        if($request->type_search == 'email')
-        {
-            $query = Post::with('user')
-                    ->whereHas('user', fn($q) => $q->where('email','LIKE',"%$search%"));
-        }
+         
+        $query = Post::where('title','LIKE',"%$search%")
+                    ->orWhereHas('user',fn($p) => $p->where('email', 'LIKE',"%$search%"));
 
         $posts = $query->orderBy('id','ASC')
                     ->paginate(15)
-                    ->appends(['search' => $search,'type_search' => $type_search]);
+                    ->appends(['search' => $search]);
 
-        return view('admin.postsAdmin',compact('posts','search','type_search'));
+        return view('admin.postsAdmin',compact('posts','search'));
     }
 
     public function showEditPost($slug = null){
@@ -69,9 +61,10 @@ class AdminController extends Controller
         }
 
         $post = Post::where('slug',$slug)->first();
+        $postsStatus = PostsStatus::cases();
         
         if($post)
-            return view('admin.editPosts',compact('post'));
+            return view('admin.editPosts',compact('post','postsStatus'));
         else
             return redirect()->route('admin.posts')->with('error','Có lỗi xảy ra. Không tìm thấy bài viết');
     }
@@ -125,9 +118,9 @@ class AdminController extends Controller
         }
 
         $user = User::where('id',$id)->first();
-
+        $userStatus = UserStatus::cases();
         if($user)
-            return view('admin.editUser',compact('user'));
+            return view('admin.editUser',compact('user','userStatus'));
         else
             return redirect()->route('admin.users')->with('error','Có lỗi xảy ra. Không tìm thấy người dùng');
     }

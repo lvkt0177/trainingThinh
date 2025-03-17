@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\URL;
 
 class EmailJob implements ShouldQueue
 {
+    protected $queue = 'email';
     use Dispatchable, Queueable, InteractsWithQueue, SerializesModels;
 
     /**

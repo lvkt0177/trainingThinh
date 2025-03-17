@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 
+use App\Enums\UserStatus;
+
 class UserAuthController extends Controller
 {
     //
@@ -31,25 +33,25 @@ class UserAuthController extends Controller
         {
             $user = Auth::guard('user')->user();
             
-            if($user->status == 0)
+            if($user->status === UserStatus::choPheDuyet)
             {
                 Auth::guard('user')->logout();
                 return back()->with('error','Tai khoan dang cho phe duyet');
             }
 
-            if($user->status == 2)
+            if($user->status == UserStatus::biKhoa)
             {
                 Auth::guard('user')->logout();
                 return back()->with('error','Tai khoan bi tu choi dang nhap');
             }
 
-            if($user->status == 3)
+            if($user->status == UserStatus::biTuChoi)
             {
                 Auth::guard('user')->logout();
                 return back()->with('error','Tai khoan da bi khoa');
             }
 
-            if($user->status == 1)
+            if($user->status == UserStatus::duocPheDuyet)
             {
                 return redirect()->route('training.home')->with('login','Dang nhap thanh cong');
             }

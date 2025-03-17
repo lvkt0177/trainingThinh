@@ -17,15 +17,17 @@ use App\Mail\EmailPost;
 class PostsJob implements ShouldQueue
 {
     use Dispatchable, Queueable, InteractsWithQueue, SerializesModels;
-
+    
     /**
      * Create a new job instance.
      */
     protected $post;
+
     public function __construct($post)
     {
         //
         $this->post = $post;
+        $this->onQueue('email');
     }
 
     /**
@@ -40,4 +42,6 @@ class PostsJob implements ShouldQueue
         Mail::to($user_Email)->send(new EmailPost($post->title,$post->slug));
 
     }
+
+   
 }
